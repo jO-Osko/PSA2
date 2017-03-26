@@ -35,6 +35,8 @@ class Avl(AbstractTree):
                     # we just add, we dont need to do any rebalancing
                     elif subroot.left is None:
                         subroot.left = Node(value=T, parent=subroot)
+                        if self.depth < subroot.left.depth:
+                            self.depth = subroot.left.depth
                         dodali = True
                     elif subroot.right is None and subroot.left is not None:
                         # We rebalance LL
@@ -52,6 +54,8 @@ class Avl(AbstractTree):
                         subroot = subroot.right
                     elif subroot.right is None:
                         subroot.right = Node(value=T, parent=subroot)
+                        if self.depth < subroot.right.depth:
+                            self.depth = subroot.right.depth
                         dodali = True
                     elif subroot.right is not None and subroot.left is None:
                         # we rebalance RL
@@ -62,6 +66,7 @@ class Avl(AbstractTree):
                         else:
                             self.RRRotation(subroot, T)
                             dodali = True
+            self.rebalance(self.root)
 
     def remove(self, T):
         """
@@ -73,10 +78,14 @@ class Avl(AbstractTree):
         """
         Returns True if T is an item of Avl tree
         """
-        pass
+        subroot = self.root
+        if T == self.root.value:
+            return True
+        else:
+            raise NotImplementedError("Not yet done")
 
     # We always rebalance node with the noode that is in the root
-    def rabalance(self, RebalanceNode):
+    def rebalance(self, RebalanceNode):
         """
         Rebalances the tree with the root in RebalanceNode, it calls the sub method depending on type of rebalancing required
         """
