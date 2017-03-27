@@ -19,12 +19,15 @@ class Avl(AbstractTree):
         super().__init__()
 
     def insert(self, T):
+        # So we insert into empty tree
         if self.root is None:
             self.root = Node(T)
+            self.depth = 1
         else:
             dodali = False
             # Rebalance is the indicator parameter, that tells us if rebalancig is needet
             # and does the rebalacing of type rebalance[1]
+            rebalancingNeedet = False
             subroot = self.root
             while not dodali:
                 # We go left
@@ -37,6 +40,7 @@ class Avl(AbstractTree):
                         subroot.left = Node(value=T, parent=subroot)
                         if self.depth < subroot.left.depth:
                             self.depth = subroot.left.depth
+                            rebalancingNeedet = True
                         dodali = True
                     elif subroot.right is None and subroot.left is not None:
                         # We rebalance LL
@@ -56,6 +60,7 @@ class Avl(AbstractTree):
                         subroot.right = Node(value=T, parent=subroot)
                         if self.depth < subroot.right.depth:
                             self.depth = subroot.right.depth
+                            rebalancingNeedet = True
                         dodali = True
                     elif subroot.right is not None and subroot.left is None:
                         # we rebalance RL
@@ -66,7 +71,8 @@ class Avl(AbstractTree):
                         else:
                             self.RRRotation(subroot, T)
                             dodali = True
-            self.rebalance(self.root)
+            if rebalancingNeedet:
+                self.rebalance(self.root)
 
     def remove(self, T):
         """
@@ -78,11 +84,20 @@ class Avl(AbstractTree):
         """
         Returns True if T is an item of Avl tree
         """
+        if self.root is None:
+            return False
         subroot = self.root
-        if T == self.root.value:
-            return True
-        else:
-            raise NotImplementedError("Not yet done")
+        i = 0
+        while i < self.depth:
+            if T == subroot.value:
+                return True
+            elif T < subroot.value:
+                subroot = subroot.left
+            else:
+                subroot = subroot.right
+            i += 1
+        return False
+            # raise NotImplementedError("Not yet done")
 
     # We always rebalance node with the noode that is in the root
     def rebalance(self, RebalanceNode):
