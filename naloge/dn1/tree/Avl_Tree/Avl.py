@@ -39,7 +39,7 @@ class Avl(AbstractTree):
                     elif subroot.left is None:
                         subroot.left = Node(value=T, parent=subroot)
                         if self.depth < subroot.left.depth:
-                            self.depth = subroot.left.depth
+                            self.depth = 1 + subroot.left.depth
                             rebalancingNeedet = True
                         dodali = True
                     elif subroot.right is None and subroot.left is not None:
@@ -59,7 +59,7 @@ class Avl(AbstractTree):
                     elif subroot.right is None:
                         subroot.right = Node(value=T, parent=subroot)
                         if self.depth < subroot.right.depth:
-                            self.depth = subroot.right.depth
+                            self.depth = 1 + subroot.right.depth
                             rebalancingNeedet = True
                         dodali = True
                     elif subroot.right is not None and subroot.left is None:
@@ -171,3 +171,9 @@ class Avl(AbstractTree):
             new_node.right = Node(value=value2, parent=new_node)
         else:
             pass
+
+    def __str__(self):
+        if self.root is None:
+            return "None"
+        return str(self.root)
+

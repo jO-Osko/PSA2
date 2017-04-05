@@ -19,7 +19,18 @@ class Node():
             self.depth = 0
 
     def __str__(self):
-        return str(self.value) + "(" + str(self.depth) + ")"
+        if self.left is not None:
+            if self.right is not None:
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + str(self.left) + ")" + " right:(" + str(self.right) + ")"
+            else:
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + str(self.left) + ")" + " right:(" + " " + ")"
+        else:
+            if self.right is not None:
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + " " + ")" + " right:(" + str(self.right) + ")"
+            else:
+                return str(self.value) + "[" + str(self.depth) + "]"
+
+
 
 
 
