@@ -10,12 +10,12 @@ class Avl(AbstractTree):
     """
     def __init__(self, data=None):
         self.depth = 0
+        self.root = None
         if data is not None:
-            self.root = Node(data[0])
-            for i in data[:1]:
+            #self.root = Node(data[0])
+            for i in data:
                 self.insert(i)
-        else:
-            self.root = None
+                print(self.depth)
         super().__init__()
 
     def insert(self, T):
@@ -38,7 +38,7 @@ class Avl(AbstractTree):
                     # we just add, we dont need to do any rebalancing
                     elif subroot.left is None:
                         subroot.left = Node(value=T, parent=subroot)
-                        if self.depth < subroot.left.depth:
+                        if self.depth < subroot.left.depth+1:
                             self.depth = 1 + subroot.left.depth
                             rebalancingNeedet = True
                         dodali = True
@@ -52,13 +52,13 @@ class Avl(AbstractTree):
                             self.LRRotation(subroot, T)
                             dodali = True
                 # We go right
-                elif T >= subroot.value:
+                elif T > subroot.value:
                     # We need to go deeper into right tree
                     if subroot.right is not None and subroot.left is not None:
                         subroot = subroot.right
                     elif subroot.right is None:
                         subroot.right = Node(value=T, parent=subroot)
-                        if self.depth < subroot.right.depth:
+                        if self.depth < subroot.right.depth+1:
                             self.depth = 1 + subroot.right.depth
                             rebalancingNeedet = True
                         dodali = True
@@ -71,6 +71,8 @@ class Avl(AbstractTree):
                         else:
                             self.RRRotation(subroot, T)
                             dodali = True
+                elif T == subroot.value:
+                    break
             if rebalancingNeedet:
                 self.rebalance(self.root)
 
