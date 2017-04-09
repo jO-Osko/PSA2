@@ -19,7 +19,7 @@ class BTree(AbstractTree):
     def __repr__(self):
         return str(self.root)
 
-    def insert(self, item, node=None):
+    def insert(self, item, node=None, force=False):
         """
         Vstavi element item v iskalno drevo, če ta element že obstaja ga prepišemo z novim
         :param item: Element, ki ga vstavljamo v drevo
@@ -28,42 +28,38 @@ class BTree(AbstractTree):
         """
         if node is None:
             node = self.root
-        if node.children is None:
+        if node.children is None or force:
             if len(node.keys) == 2*self.order:
                 # Ustvari novi vozlišči -- vsako dobi polovico ključev, element na sredini pošlje staršu.
                 position = bisect.bisect(node.keys, item)
                 if position < self.order:
-                    right_child = BTreeNode(node.keys[self.order:])
-                    left_child = BTreeNode(node.keys[:self.order - 1])
+                    right_child = BTreeNode(node.keys[self.order:], None, node.parent)
+                    left_child = BTreeNode(node.keys[:self.order - 1], None, node.parent)
                     bisect.insort(left_child.keys, item)
+                    extra_item = node.keys[self.order-1]
                     if node.parent is None:
                         self.root = BTreeNode([node.keys[self.order-1]], [left_child, right_child])
                         left_child.parent = self.root
                         right_child.parent = self.root
-                    else:
-                        parent_pos = self.send_to_parent(node, node.keys[self.order-1])
-                        node.parent.children.insert(parent_pos + 1, right_child)
                 elif position > self.order:
-                    right_child = BTreeNode(node.keys[self.order+1:])
-                    left_child = BTreeNode(node.keys[:self.order])
+                    right_child = BTreeNode(node.keys[self.order+1:], None, node.parent)
+                    left_child = BTreeNode(node.keys[:self.order], None, node.parent)
                     bisect.insort(right_child.keys, item)
+                    extra_item = node.keys[self.order]
                     if node.parent is None:
                         self.root = BTreeNode([node.keys[self.order]], [left_child, right_child])
                         left_child.parent = self.root
                         right_child.parent = self.root
-                    else:
-                        parent_pos = self.send_to_parent(node, node.keys[self.order])
-                        node.parent.children.insert(parent_pos + 1, right_child)
                 else:
-                    right_child = BTreeNode(node.keys[self.order:])
-                    left_child = BTreeNode(node.keys[:self.order])
+                    right_child = BTreeNode(node.keys[self.order:], None, node.parent)
+                    left_child = BTreeNode(node.keys[:self.order], None, node.parent)
+                    extra_item = item
                     if node.parent is None:
                         self.root = BTreeNode([item], [left_child, right_child])
                         left_child.parent = self.root
                         right_child.parent = self.root
-                    else:
-                        parent_pos = self.send_to_parent(node, node.keys[item])
-                        node.parent.children.insert(parent_pos + 1, right_child)
+                if node.parent is not None:
+                    self.send_to_parent(node, extra_item, left_child, right_child)
             else:
                 bisect.insort(node.keys, item)
         else:
@@ -75,13 +71,16 @@ class BTree(AbstractTree):
                     break
             self.insert(item, node.children[index])
 
-    def send_to_parent(self, node, item):
+    def send_to_parent(self, node, item, left_child, right_child):
         if len(node.parent.keys) == 2*self.order:
-            raise Warning("Parent node is full!")
+            self.insert(item, node.parent, force=True)
+            print("iz send_to_parent", node.parent)
         else:
             position = bisect.bisect(node.parent.keys, item)
             node.parent.keys.insert(position, item)
-            return position
+            node.parent.children.insert(position, left_child)
+            node.parent.children.insert(position + 1, right_child)
+            node.parent.children.remove(node)
 
     def remove(self, item):
         """
@@ -91,10 +90,18 @@ class BTree(AbstractTree):
         """
         raise NotImplementedError("Not implemented")
 
-    def search(self, item):
+    def search(self, item, node=None):
         """
         Vrne True, če se item nahaja v drevesu in False, če se ne.
         :param item: Element, ki ga v drevesu iščemo
+        :param node: Vozlišče iz katerega iščemo
         :return: True če se item nahaja v drevesu, drugače False.
         """
-        raise NotImplementedError("Not implemented")
+        if node is None:
+            node = self.root
+        pos = bisect.bisect(node.keys, item)
+        if pos > 0 and item == node.keys[pos - 1]:
+            return True
+        elif node.children is not None:
+            return self.search(item, node.children[pos])
+        return False
