@@ -92,12 +92,7 @@ class BTree(AbstractTree):
             else:
                 bisect.insort(node.keys, item)
         else:
-            # TODO: Izboljsaj iskanje indeksa z bisekcijo
-            index = len(node.keys)
-            for i, key in enumerate(node.keys):
-                if item < key:
-                    index = i
-                    break
+            index = bisect.bisect(node.keys, item)
             self.insert(item, node.children[index])
         if force:
             return left_child, right_child
