@@ -16,6 +16,7 @@ class BTree(AbstractTree):
 
     def __str__(self):
         return str(self.root)
+
     def __repr__(self):
         return str(self.root)
 
@@ -24,6 +25,7 @@ class BTree(AbstractTree):
         Vstavi element item v iskalno drevo, če ta element že obstaja ga prepišemo z novim
         :param item: Element, ki ga vstavljamo v drevo
         :param node: Vozlišče, v katerega vstavljamo element
+        :param force: True, če vstavljamo direktno v izbrano vozlišče, tudi če ima otroke, sicer False
         :return: None
         """
         left_child = None
