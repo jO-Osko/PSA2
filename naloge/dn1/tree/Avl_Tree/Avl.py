@@ -25,7 +25,6 @@ class Avl(AbstractTree):
         else:
             while True:
                 if T < adding_to.value:
-                    print('grem levo')
                     if adding_to.left is not None:
                         adding_to = adding_to.left
                     else:
@@ -35,7 +34,6 @@ class Avl(AbstractTree):
                         adding_to = adding_to.left
                         break
                 elif T > adding_to.value:
-                    print('grem desno')
                     if adding_to.right is not None:
                         adding_to = adding_to.right
                     else:
@@ -49,15 +47,9 @@ class Avl(AbstractTree):
         print("rebalanciranje")
 
         while adding_to.parent is not None:
-            if adding_to.parent.depth == adding_to.depth:
-                adding_to.parent.depth += 1
+            adding_to._depth()
             adding_to = adding_to.parent
-            print("adding to",adding_to)
-            print("pred",adding_to)
-            self.rebalance(adding_to)
-            print("po",adding_to)
-
-
+            adding_to = self.rebalance(adding_to)
 
 
     def remove(self, T):
@@ -74,7 +66,7 @@ class Avl(AbstractTree):
             return False
         subroot = self.root
         i = 0
-        while i < self.depth:
+        while i < self.root.depth:
             if T == subroot.value:
                 return True
             elif T < subroot.value:
@@ -90,40 +82,26 @@ class Avl(AbstractTree):
         """
         Rebalances the tree with the root in RebalanceNode, it calls the sub method depending on type of rebalancing required
         """
-        print("rebalancing")
-        def balance(root):
-            if root.left is None:
-                lev = 0
-            else:
-                lev = root.left.depth
-            if root.right is None:
-                desn = 0
-            else:
-                desn = root.right.depth
-            print("desn",desn)
-            print("lev",lev)
-            return desn-lev
-
-        print("balance",balance(RebalanceNode))
-        if balance(RebalanceNode) < -1:
+        if RebalanceNode.balance() < -1:
         # left heawy
-            if balance(RebalanceNode.left) < 1:
+            if RebalanceNode.left.balance() < 1:
             # it is not right heawy
-                self.RRRotation(RebalanceNode)
+                RebalanceNode = self.RRRotation(RebalanceNode)
             else:
             #it is left heawy
-                self.LRRotation(RebalanceNode)
-        elif balance(RebalanceNode) > 1:
-            if balance(RebalanceNode.right) > -1:
-                self.LLRotation(RebalanceNode)
+                RebalanceNode = self.LRRotation(RebalanceNode)
+        elif RebalanceNode.balance() > 1:
+            if RebalanceNode.right.balance() > -1:
+                RebalanceNode = self.LLRotation(RebalanceNode)
             else:
-                self.RLRotation(RebalanceNode)
+                RebalanceNode = self.RLRotation(RebalanceNode)
+        print(RebalanceNode,"return od rebalance")
+        return RebalanceNode
         # else:
         #     if RebalanceNode.parent is not None:
         #         if RebalanceNode.parent.depth == RebalanceNode.depth:
         #             RebalanceNode.parent.depth +=1
         #
-
 
     def LLRotation(self,RebalanceNode):
         """
@@ -136,12 +114,14 @@ class Avl(AbstractTree):
         righty = RebalanceNode.right
         A = RebalanceNode.left
         B = righty.left
-        B.parent = root
+        if B is not None:
+            B.parent = root
         root.left = A
         root.right = B
         RebalanceNode = righty
         RebalanceNode.left = root
         RebalanceNode.parent = parenttr
+        return RebalanceNode
 
 
     def LRRotation(self, RebalanceNode, addNode = None):
@@ -173,14 +153,16 @@ class Avl(AbstractTree):
         lefti = RebalanceNode.left
         A = lefti.left   # to nerbim
         B = lefti.right
-        B.parent = root
+        if B is not None:
+            B.parent = root
         C = RebalanceNode.right
         root.left = B
         root.right = C
-        RebalanceNode = lefti
-        RebalanceNode.parent = parenttr
-        RebalanceNode.left = A  # in tega tut ne
-        RebalanceNode.right = root
+        lefti.parent = parenttr
+        lefti.left = A  # in tega tut ne
+        lefti.right = root
+        print("kar dobim oz rrrot",lefti)
+        return lefti
 
     def __str__(self):
         if self.root is None:
