@@ -8,28 +8,66 @@ class Tree_234(AbstractTree):
     def __init__(self):
         self.koren = Node()
 
+    def __repr__(self):
+        return str(self.koren)
+
+    def add(self, value):
+        b, node = self.search(value)
+        if not b:
+            node.add(value)
+            while self.koren.parent is not None:
+                self.koren = self.koren.parent
+        else:
+            print('Element v drevesu že obstaja!')
+
     def search(self, k):
 
         def find(self, k, node):
-            for i in range(len(node.key)):
-                tip, value = node.key[i]
-                if tip == 'V':
-                    if value == k:
-                        return True, node
-                    if value > k:
-                        if node.key[i-1][1] is not None:
-                            return find(self, k, node.key[i-1][1])
-                        else:
-                            return False, node
-            return False, node
+            for i in range(len(node.keys)):
+                value = node.keys[i]
+                if value == k:
+                    return True, node
+                if value > k:
+                    if node.childs[i] is not None:
+                        return find(self, k, node.childs[i])
+                    else:
+                        return False, node
+            if node.childs[-1] is not None:
+                return find(self, k, node.childs[-1])
+            else:
+                return False, node
         
         return find(self, k, self.koren)
+
+    def succ(self, k, node):
+        if node.height > 0:
+            ind = node.keys.index(k)
+            v = node.childs[ind+1]
+            while v.childs[0] is not None:
+                v = v.childs[0]
+            return v, v.keys[0]
+            
+    def remove(self, k):
+        b, node = self.search(k)
+        if not b:
+            print('Element v drevesu ne obstaja!')
+        else:
+            if node.height > 0:
+                v, nk = self.succ(k, node)
+                in1 = node.keys.index(k)
+                in2 = v.keys.index(nk)
+                node.keys[in1] = nk
+                v.keys[in2] = k
+                v.remove(k)
+            else:
+                node.remove(k)
         
 class Node():
     def __init__(self, value = None, parent = None):
         self.keys = []
         self.childs = [None]
         self.parent = parent
+        self.height = 0
         
 
     def __repr__(self):
@@ -58,20 +96,13 @@ class Node():
 
     def repair(self):
         if len(self.keys) > 3:
-            print(self)
             pushup = self.keys[2]
-            #LEVO = Node()
-            #LEVO.keys = self.keys[:2][:]
-            #LEVO.childs = self.childs[:3][:]
             DESNO = Node()
             DESNO.keys = self.keys[3:][:]
             DESNO.childs = self.childs[3:][:]
             self.keys = self.keys[:2][:]
             self.childs = self.childs[:3][:]
-            print(self)
-            print(DESNO)
             if self.parent is not None:
-                #LEVO.parent = self.parent
                 DESNO.parent = self.parent
                 self.parent.add(pushup, repair = False)
                 ind = self.parent.indeks(pushup)
@@ -79,8 +110,8 @@ class Node():
                 self.parent.childs[ind+1] = DESNO
             else:
                 parent = Node()
+                parent.height = self.height + 1
                 self.parent = parent
-                #LEVO.parent = parent
                 DESNO.parent = parent
                 parent.add(pushup, repair = False)
                 parent.childs[0] = self
@@ -89,7 +120,9 @@ class Node():
             
 
     def remove(self, value):
-        pass
+        self.keys.remove(value)
+        self.childs.pop()
+        
                         
                 
             
