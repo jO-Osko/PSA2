@@ -14,10 +14,6 @@ class Node():
         self.left = None
         self.right = None
         self.parent = parent
-        if parent != None:
-            self.level = parent.level+1
-        else:
-            self.level = 0
 
         self.depth = 0 # to je dejanska globina
 
@@ -33,14 +29,14 @@ class Node():
         """
         if self.left is not None:
             if self.right is not None:
-                return " left:(" + str(self.left) + ") " + str(self.value) + "[" + str(self.level) + "]" + " right:(" + str(self.right) + ")"
+                return " left:(" + str(self.left) + ") " + str(self.value) + "[" + str(self.depth) + "]" + " right:(" + str(self.right) + ")"
             else:
-                return " left:(" + str(self.left) + ") " + str(self.value) + "[" + str(self.level) + "]" + " right:( )"
+                return " left:(" + str(self.left) + ") " + str(self.value) + "[" + str(self.depth) + "]" + " right:( )"
         else:
             if self.right is not None:
-                return " left:(" + " " + ") " + str(self.value) + "[" + str(self.level) + "]" + " right:(" + str(self.right) + ")"
+                return " left:(" + " " + ") " + str(self.value) + "[" + str(self.depth) + "]" + " right:(" + str(self.right) + ")"
             else:
-                return str(self.value) + "[" + str(self.level) + "]"
+                return str(self.value) + "[" + str(self.depth) + "]"
 
     def posorder(self):
         """
@@ -48,14 +44,14 @@ class Node():
         """
         if self.left is not None:
             if self.right is not None:
-                return str(self.value) + "[" + str(self.level) + "]" + " left:(" + str(self.left) + ")" + " right:(" + str(self.right) + ")"
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + str(self.left) + ")" + " right:(" + str(self.right) + ")"
             else:
-                return str(self.value) + "[" + str(self.level) + "]" + " left:(" + str(self.left) + ")" + " right:(" + " " + ")"
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + str(self.left) + ")" + " right:(" + " " + ")"
         else:
             if self.right is not None:
-                return str(self.value) + "[" + str(self.level) + "]" + " left:(" + " " + ")" + " right:(" + str(self.right) + ")"
+                return str(self.value) + "[" + str(self.depth) + "]" + " left:(" + " " + ")" + " right:(" + str(self.right) + ")"
             else:
-                return str(self.value) + "[" + str(self.level) + "]"
+                return str(self.value) + "[" + str(self.depth) + "]"
 
     def preorder(self):
         """
@@ -86,12 +82,12 @@ class Node():
         while not a.empty():
             js = a.get()
             if js.left is not None:
-                if js.left.level > res:
-                    res = js.left.level
+                if js.left.depth > res:
+                    res = js.left.depth
                     a.put(js.left)
             if js.right is not None:
-                if js.right.level > res:
-                    res = js.right.level
+                if js.right.depth > res:
+                    res = js.right.depth
                     a.put(js.right)
         return res+1
 
