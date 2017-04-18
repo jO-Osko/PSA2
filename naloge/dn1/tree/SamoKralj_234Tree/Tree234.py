@@ -5,8 +5,10 @@ from tree.AbstractTree import AbstractTree
 __author__ = 'Samo Kralj'
 
 class Tree_234(AbstractTree):
-    def __init__(self):
+    def __init__(self, data = []):
         self.koren = Node()
+        for el in data:
+            self.add(el)
 
     def __repr__(self):
         return str(self.koren)
@@ -61,6 +63,8 @@ class Tree_234(AbstractTree):
                 v.remove(k)
             else:
                 node.remove(k)
+        if len(self.koren.keys) == 0:
+            self.koren = self.koren.childs[0]
         
 class Node():
     def __init__(self, value = None, parent = None):
@@ -100,6 +104,9 @@ class Node():
             DESNO = Node()
             DESNO.keys = self.keys[3:][:]
             DESNO.childs = self.childs[3:][:]
+            for otrok in self.childs[3:]:
+                if otrok is not None:
+                    otrok.parent = DESNO
             self.keys = self.keys[:2][:]
             self.childs = self.childs[:3][:]
             if self.parent is not None:
@@ -139,7 +146,7 @@ class Node():
                     ro.childs.pop()
                     return
             if ind == len(parent.keys):
-                if len(parent.childs[ind].keys) >= 2:
+                if len(parent.childs[ind-1].keys) >= 2:
                     lo = parent.childs[ind-1]
                     self.keys[0] = parent.keys[-1]
                     parent.keys[-1] = lo.keys[-1]
@@ -173,27 +180,55 @@ class Node():
         while ind < len(parent.keys) and parent.keys[ind] < value:
             ind += 1
         if ind == 0:
-            self.keys[0] = parent[0]
+            self.keys[0] = parent.keys[0]
             zdruzi = parent.childs[1]
             self.keys.extend(zdruzi.keys)
             self.childs.extend(zdruzi.childs[1:])
             parent.keys.pop(0)
             parent.childs.pop(1)
-            return
-        if ind == len(parent.keys):
+        elif ind == len(parent.keys):
             zdruzi = parent.childs[ind-1]
             self.keys = zdruzi.keys[:] + [parent.keys[ind-1]]
             self.childs = zdruzi.childs + self.childs[1:]
             parent.keys.pop(-1)
             parent.childs.pop(-2)
-            return
         else:
             zdruzi = parent.childs[ind+1]
             self.keys = [parent.keys[ind]] + zdruzi.keys
             self.childs = self.childs + zdruzi.childs[1:]
             parent.keys.pop(ind)
             parent.childs.pop(ind+1)
-            return
+        if len(parent.keys) == 0:
+            parent.cascade()
+
+    def cascade(self):
+        parent = self.parent
+        if parent is not None:
+            for i, otrok in enumerate(parent.childs):
+                if otrok == self:
+                    if i < len(parent.childs) - 1:
+                        self.keys.append(parent.keys[i])
+                        zdruzi = parent.childs[i+1]
+                        self.keys = self.keys + zdruzi.keys
+                        self.childs = self.childs + zdruzi.childs
+                        parent.keys.pop(i)
+                        parent.childs.pop(i+1)
+                        if len(parent.keys) == 0:
+                            parent.cascade()
+                    else:
+                        self.keys.append(parent.keys[i-1])
+                        zdruzi = parent.childs[i-1]
+                        self.keys = zdruzi.keys + self.keys
+                        self.childs = zdruzi.childs + self.childs
+                        parent.keys.pop(i-1)
+                        parent.childs.pop(i-1)
+                        if len(parent.keys) == 0:
+                            parent.cascade()
+                    break
+                        
+                        
+                    
+            
         
             
         
