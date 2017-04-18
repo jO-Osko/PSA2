@@ -50,7 +50,7 @@ class Tree_234(AbstractTree):
     def remove(self, k):
         b, node = self.search(k)
         if not b:
-            print('Element v drevesu ne obstaja!')
+            raise ValueError('Element v drevesu ne obstaja!')
         else:
             if node.height > 0:
                 v, nk = self.succ(k, node)
@@ -117,12 +117,87 @@ class Node():
                 parent.childs[0] = self
                 parent.childs[1] = DESNO
             self.parent.repair()
-            
 
+                
     def remove(self, value):
-        self.keys.remove(value)
-        self.childs.pop()
+        if len(self.keys) > 1:
+            self.keys.remove(value)
+            self.childs.pop()
+            return 
+        if self.parent is not None:
+            parent = self.parent
+            glej = self.keys[0]
+            ind = 0
+            while ind < len(parent.keys) and parent.keys[ind] < glej:
+                ind += 1
+            if ind == 0:
+                if len(parent.childs[1].keys) >= 2:
+                    ro = parent.childs[1]
+                    self.keys[0] = parent.keys[0]
+                    parent.keys[0] = ro.keys[0]
+                    ro.keys.pop(0)
+                    ro.childs.pop()
+                    return
+            if ind == len(parent.keys):
+                if len(parent.childs[ind].keys) >= 2:
+                    lo = parent.childs[ind-1]
+                    self.keys[0] = parent.keys[-1]
+                    parent.keys[-1] = lo.keys[-1]
+                    lo.keys.pop(-1)
+                    lo.childs.pop()
+                    return
+            if 0 < ind < len(parent.keys):
+                lo = parent.childs[ind-1]
+                ro = parent.childs[ind+1]
+                if len(lo.keys) >= 2:
+                    self.keys[0] = parent.keys[ind-1]
+                    parent.keys[ind-1] = lo.keys[-1]
+                    lo.keys.pop(-1)
+                    lo.childs.pop()
+                    return
+                if len(ro.keys) >= 2:
+                    self.keys[0] = parent.keys[ind]
+                    parent.keys[ind] = ro.keys[0]
+                    ro.keys.pop(0)
+                    ro.childs.pop()
+                    return
+            self.special(value)
+        else:
+            # V vozlišču je le ena vrednost in nimamo starša.
+            self.keys.remove(value)
+            self.childs.pop()
+
+    def special(self, value):
+        parent = self.parent
+        ind = 0
+        while ind < len(parent.keys) and parent.keys[ind] < value:
+            ind += 1
+        if ind == 0:
+            self.keys[0] = parent[0]
+            zdruzi = parent.childs[1]
+            self.keys.extend(zdruzi.keys)
+            self.childs.extend(zdruzi.childs[1:])
+            parent.keys.pop(0)
+            parent.childs.pop(1)
+            return
+        if ind == len(parent.keys):
+            zdruzi = parent.childs[ind-1]
+            self.keys = zdruzi.keys[:] + [parent.keys[ind-1]]
+            self.childs = zdruzi.childs + self.childs[1:]
+            parent.keys.pop(-1)
+            parent.childs.pop(-2)
+            return
+        else:
+            zdruzi = parent.childs[ind+1]
+            self.keys = [parent.keys[ind]] + zdruzi.keys
+            self.childs = self.childs + zdruzi.childs[1:]
+            parent.keys.pop(ind)
+            parent.childs.pop(ind+1)
+            return
         
+            
+        
+            
                         
                 
             
