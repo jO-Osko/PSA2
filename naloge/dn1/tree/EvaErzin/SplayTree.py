@@ -37,7 +37,7 @@ class SplayTree(AbstractTree):
         parent = None
         side = 0 ## 0 if item is left child of parent, else 1
         node = self.root
-        while node:
+        while node is not None:
             if item > node.key:
                 parent = node
                 side = 1
@@ -58,32 +58,28 @@ class SplayTree(AbstractTree):
         self.splay(node)
 
     def search(self, item):
-        node = self.root
-        while node:
-            if item > node.key:
-                node = node.right
-            elif item < node.key:
-                node = node.left
-            else:
-                self.splay(node)
-                return True
-        return False
+        n = self.find(item)
+        if n is None:
+            return False
+        else:
+            self.splay(n)
+            return True
 
     def find(self, item):
         node = self.root
-        while node:
-            if item > node.key:
-                node = node.right
-            elif item < node.key:
+        while node is not None:
+            if node.key == item:
+                return node
+            elif node.key > item:
                 node = node.left
             else:
-                return node
+                node = node.right
         return None
 
     def findMax(self, start=None):
-        if not start:
+        if start is None:
             start = self.root
-        if not start:
+        if start is None:
             return
         else:
             while start.right:
@@ -116,23 +112,24 @@ class SplayTree(AbstractTree):
     def zigZig(self, node, left):
         p = node.parent
         g = p.parent
+        gg = g.parent
+        if gg is not None:
+            if gg.left == g:
+                gg.left = node
+            else:
+                gg.right = node
+        node.parent = gg
         if left:
             l = node.left
             if l:
                 l.parent = p
             if p.left:
                 p.left.parent = g
-            node.parent = g.parent
-            if node.parent:
-                if node.parent.left is g:
-                    node.parent.left = node
-                else:
-                    node.parent.right = node
+            g.right = p.left
+            p.right = l
+            p.left = g
             g.parent = p
             p.parent = node
-            g.right = p.left
-            p.left = g
-            p.right = l
             node.left = p
         else:
             r = node.right
@@ -140,20 +137,12 @@ class SplayTree(AbstractTree):
                 r.parent = p
             if p.right:
                 p.right.parent = g
-            node.parent = g.parent
-            if node.parent:
-                if node.parent.left is g:
-                    node.parent.left = node
-                else:
-                    node.parent.right = node
+            g.left = p.right
+            p.left = r
+            p.right = g
             g.parent = p
             p.parent = node
-            g.left = p.right
-            p.right = g
-            p.left = r
             node.right = p
-
-
 
     def zigZag(self, node, lr):
         p = node.parent
@@ -166,6 +155,11 @@ class SplayTree(AbstractTree):
             if r:
                 r.parent = g
             node.parent = g.parent
+            if g.parent is not None:
+                if g.parent.right is g:
+                    g.parent.right = node
+                else:
+                    g.parent.left = node
             g.parent = node
             p.parent = node
             g.left = node.right
@@ -178,6 +172,11 @@ class SplayTree(AbstractTree):
             if r:
                 r.parent = p
             node.parent = g.parent
+            if g.parent is not None:
+                if g.parent.right is g:
+                    g.parent.right = node
+                else:
+                    g.parent.left = node
             g.parent = node
             p.parent = node
             g.right = l
@@ -186,6 +185,8 @@ class SplayTree(AbstractTree):
             node.left = g
 
     def splay(self, node):
+        if node is None:
+            return
         while node.parent:
             if not node:
                 raise ValueError("This shouldn't have happened")
@@ -216,7 +217,14 @@ class SplayTree(AbstractTree):
             self.splay(node)
             right = node.right
             self.root = node.left
-            node.left.parent = None
-            m = self.findMax()
-            self.splay(m)
-            m.right = right
+            if node.left is not None:
+                node.left.parent = None
+                m = self.findMax()
+                self.splay(m)
+                self.root.right = right
+                if self.root.right is not None:
+                    self.root.right.parent = self.root
+            else:
+                self.root = right
+                if self.root is not None:
+                    self.root.parent = None
