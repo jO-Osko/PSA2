@@ -4,13 +4,13 @@
 
 #### Izbrana drevesa
 
-+ Luka Avbreht:     ______________________
-+ Eva Erzin:        ______________________
-+ Jan Golob:        ______________________
-+ Filip Koprivec:   ______________________
-+ Samo Kralj:       ______________________
-+ Luka Lajovic:     ______________________
-+ Nina Slivnik:     ______________________
-+ Žiga Zupančič:    ______________________
-
++ Luka Avbreht:     `AVL Tree`
++ Eva Erzin:        `Splay Tree`
++ Jan Golob:        `B+ Tree`
++ Filip Koprivec:   `Red-Black Tree`
++ Samo Kralj:       `2-3-4 Tree`
++ Luka Lajovic:     `Scapegoat Tree`
++ Nina Slivnik:     `Skip list`
++ Žiga Zupančič:    `B Tree`
++ Kevin Štampar:    `Treap`
 
