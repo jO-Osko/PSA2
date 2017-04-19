@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """Generate report"""
+import random
 
 __author__ = "Filip Koprivec"
 
@@ -24,8 +25,11 @@ class UserData:
 
 # Za resno testiranje odstranite vzorec, saj je zelo počasen.
 trees = [
-    ("vzorec", "NaiveTree", "NaiveTree", "r"),
+    # ("vzorec", "NaiveTree", "NaiveTree", "r"),
     ("FilipKoprivec", "RedBlackTree", "RedBlackTree", "b"),
+    ("EvaErzin", "SplayTree", "SplayTree", "g"),
+    # ("SamoKralj_234Tree", "Tree234", "Tree_234", "c"),
+    ("ZigaZupancic", "BTree", "BTree", "c"),
 ]
 
 from time_tests import LinearInsert, AbstractTest, RandomInsert, InsertAndSearch, RandomInsertAndSearch, \
@@ -52,7 +56,7 @@ def import_helper(user_name: str, file_name: str, class_name: str, prefix: str =
     return tree
 
 
-def main(size: int = 10 ** 3) -> None:
+def main(size: int = 10 ** 4) -> None:
     users = []  # type: List[UserData]
     for user_name, file_name, class_name, color_code in trees:
         users.append(UserData(user_name, file_name, class_name,
