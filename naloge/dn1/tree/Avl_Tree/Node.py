@@ -75,22 +75,6 @@ class Node():
         self.depth = 1+max(lefti,righti)
         return 1+max(lefti,righti)
 
-    def calculate_depth(self):
-        res = 0
-        a = queue.Queue()
-        a.put(self)
-        while not a.empty():
-            js = a.get()
-            if js.left is not None:
-                if js.left.depth > res:
-                    res = js.left.depth
-                    a.put(js.left)
-            if js.right is not None:
-                if js.right.depth > res:
-                    res = js.right.depth
-                    a.put(js.right)
-        return res+1
-
 
 
 

@@ -24,7 +24,6 @@ class Avl(AbstractTree):
         else:
             return 0
 
-    # @staticmethod
     def recompute_heights(self, start_from_node):
         changed = True
         node = start_from_node
@@ -33,6 +32,13 @@ class Avl(AbstractTree):
             node.depth = node._depth()
             changed = node.depth != old_height
             node = node.parent
+
+    def left_most(self, root_node):
+        """returns the left most node in tree with root root_node """
+        node = root_node
+        while node.left is not None:
+            node = node.left
+        return node
 
     def insert(self, T):
         # So we insert into empty tree
@@ -63,20 +69,101 @@ class Avl(AbstractTree):
                         break
                 else:
                     raise ValueError("can only add one element of value")
-        print("rebalanciranje")
-
         while adding_to.parent is not None:
             adding_to._depth()
             adding_to = adding_to.parent
             self.rebalance(adding_to)
         adding_to._depth()
 
-
     def remove(self, T):
         """
         Removes item T form Avl tree
         """
-        pass
+        print(self)
+        print("removing {0}".format(T))
+        subroot = self.root
+        i = 0
+        while i < self.root.depth+1:
+            if T == subroot.value:
+                break
+            elif T < subroot.value:
+                if subroot.left is not None:
+                    subroot = subroot.left
+                else:
+                    #print("kle se zjebe uresici {}".format(T))
+                    assert ValueError("no such element with value {0}".format(T))
+            else:
+                if subroot.right is not None:
+                    subroot = subroot.right
+                else:
+                    #print("kle se zjebe {}".format(T))
+                    assert ValueError("no such element with value {0}".format(T))
+        rotatefrom = None
+        parentof = subroot.parent
+        if parentof is None:
+            camefrom = 0
+        elif parentof.right.value == subroot.value:
+            camefrom = 1
+        else:
+            camefrom = -1
+        if subroot.left is None:
+            if subroot.right is None:
+                if camefrom == 1:
+                    parentof.right = None
+                    self.recompute_heights(parentof)
+                    rotatefrom = parentof
+                elif camefrom == -1:
+                    parentof.left = None
+                    self.recompute_heights(parentof)
+                    rotatefrom = parentof
+                elif camefrom == 0:
+                    self.root = None
+                else:
+                    assert ValueError("od nikjer nismo prsli....")
+            else:
+                if camefrom == 1:
+                    parentof.right = subroot.right
+                    self.recompute_heights(parentof.right)
+                    rotatefrom = parentof.right
+                elif camefrom == -1:
+                    parentof.left = subroot.right
+                    self.recompute_heights(parentof.left)
+                    rotatefrom = parentof.left
+                elif camefrom == 0:
+                    self.root = subroot
+                    self.root.parent = None
+                    self.recompute_heights(self.root)
+                    rotatefrom = self.root
+                else:
+                    assert ValueError("od nikjer nismo prsli....")
+        else:
+            # left is not None
+            if subroot.right is None:
+                if camefrom == 0:
+                    self.root = subroot
+                    self.root.parent = None
+                    self.recompute_heights(self.root)
+                elif camefrom == 1:
+                    parentof.right = subroot.left
+                    subroot.left.parent = parentof
+                    self.recompute_heights(parentof.right)
+                elif camefrom == -1:
+                    parentof.left = subroot.left
+                    subroot.left.parent = parentof
+                    self.recompute_heights(parentof.left)
+                else:
+                    assert ValueError("od nikjer nismo prsli....")
+            else:
+                najbollev = self.left_most(subroot.right)
+                print(najbollev)
+        if rotatefrom is not None:
+            while rotatefrom.parent is not None:
+                rotatefrom = rotatefrom.parent
+                rotatefrom._depth()
+                self.rebalance(rotatefrom)
+            rotatefrom._depth()
+
+
 
     def search(self, T):
         """
@@ -86,13 +173,19 @@ class Avl(AbstractTree):
             return False
         subroot = self.root
         i = 0
-        while i < self.root.depth:
+        while i < self.root.depth+1:
             if T == subroot.value:
                 return True
             elif T < subroot.value:
-                subroot = subroot.left
+                if subroot.left is not None:
+                    subroot = subroot.left
+                else:
+                    return False
             else:
-                subroot = subroot.right
+                if subroot.right is not None:
+                    subroot = subroot.right
+                else:
+                    return False
             i += 1
         return False
 
@@ -118,7 +211,6 @@ class Avl(AbstractTree):
         """
         Does the Left-Left rebalancing od Subtree with root node RebalanceNode,
         """
-        print("delamo LLRot")
         parenttt = A.parent
         B = A.right
         C = B.right
@@ -145,7 +237,6 @@ class Avl(AbstractTree):
         """
         Does the Left-Right rebalancing od Subtree with root node RebalanceNode,
         """
-        print("LR rotatoion")
         parenttt = A.parent
         B = A.left
         C = B.right
@@ -175,7 +266,6 @@ class Avl(AbstractTree):
         """
         Does the Right-Left rebalancing od Subtree with root node RebalanceNode,
         """
-        print("RL rotatoion")
         parenttt = A.parent
         B = A.right
         C = B.left
@@ -205,7 +295,6 @@ class Avl(AbstractTree):
         """
         Does the Right-Right rebalancing od Subtree with root node RebalanceNode,
         """
-        print("delamo RRRot")
         parenttt = A.parent
         B = A.left
         C = B.left
