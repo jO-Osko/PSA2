@@ -4,7 +4,7 @@ from .Node import Node
 __author__ = "Luka Avbreht"
 
 
-class Avl(AbstractTree):
+class AvlTree(AbstractTree):
     """
     Clas that implements Avl tree on top of abstract tree class
     """
