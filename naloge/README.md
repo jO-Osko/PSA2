@@ -12,5 +12,5 @@
 + Luka Lajovic:     `Scapegoat Tree`
 + Nina Slivnik:     `Skip list`
 + Žiga Zupančič:    `B Tree`
-
++ Kevin Štampar:    `Treap`
 
