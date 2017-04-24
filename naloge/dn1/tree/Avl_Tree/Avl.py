@@ -79,8 +79,6 @@ class Avl(AbstractTree):
         """
         Removes item T form Avl tree
         """
-        print(self)
-        print("removing {0}".format(T))
         subroot = self.root
         i = 0
         while i < self.root.depth+1:
@@ -102,7 +100,7 @@ class Avl(AbstractTree):
         parentof = subroot.parent
         if parentof is None:
             camefrom = 0
-        elif parentof.right.value == subroot.value:
+        elif parentof.right == subroot:
             camefrom = 1
         else:
             camefrom = -1
@@ -155,15 +153,33 @@ class Avl(AbstractTree):
                     assert ValueError("od nikjer nismo prsli....")
             else:
                 najbollev = self.left_most(subroot.right)
-                print(najbollev)
+                if camefrom == 0:
+                    self.root.value = najbollev.value
+                elif camefrom == 1 or camefrom == -1:
+                    subroot.value = najbollev.value
+                else:
+                    assert ValueError("od nikjer nismo prsli....")
+                if najbollev.parent.left == najbollev:
+                    rotatefrom = najbollev.parent
+                    if najbollev.right:
+                        najbollev.parent.left = najbollev.right
+                        najbollev.right.parent = najbollev.parent
+                    else:
+                        najbollev.parent.left = None
+                else:
+                    rotatefrom = najbollev.parent
+                    if najbollev.right:
+                        najbollev.parent.right = najbollev.right
+                        najbollev.right.parent = najbollev.parent
+                    else:
+                        najbollev.parent.right = None
         if rotatefrom is not None:
             while rotatefrom.parent is not None:
                 rotatefrom = rotatefrom.parent
                 rotatefrom._depth()
                 self.rebalance(rotatefrom)
+            self.rebalance(rotatefrom)
             rotatefrom._depth()
-
-
 
     def search(self, T):
         """
