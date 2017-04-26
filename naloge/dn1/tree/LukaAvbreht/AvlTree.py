@@ -88,14 +88,14 @@ class AvlTree(AbstractTree):
                 if subroot.left is not None:
                     subroot = subroot.left
                 else:
-                    #print("kle se zjebe uresici {}".format(T))
                     assert ValueError("no such element with value {0}".format(T))
+                    break
             else:
                 if subroot.right is not None:
                     subroot = subroot.right
                 else:
-                    #print("kle se zjebe {}".format(T))
                     assert ValueError("no such element with value {0}".format(T))
+                    break
         rotatefrom = None
         parentof = subroot.parent
         if parentof is None:
@@ -121,14 +121,16 @@ class AvlTree(AbstractTree):
             else:
                 if camefrom == 1:
                     parentof.right = subroot.right
+                    subroot.right.parent = parentof
                     self.recompute_heights(parentof.right)
                     rotatefrom = parentof.right
                 elif camefrom == -1:
                     parentof.left = subroot.right
+                    subroot.right.parent = parentof
                     self.recompute_heights(parentof.left)
                     rotatefrom = parentof.left
                 elif camefrom == 0:
-                    self.root = subroot
+                    self.root = subroot.right
                     self.root.parent = None
                     self.recompute_heights(self.root)
                     rotatefrom = self.root
@@ -138,7 +140,7 @@ class AvlTree(AbstractTree):
             # left is not None
             if subroot.right is None:
                 if camefrom == 0:
-                    self.root = subroot
+                    self.root = subroot.left
                     self.root.parent = None
                     self.recompute_heights(self.root)
                 elif camefrom == 1:
