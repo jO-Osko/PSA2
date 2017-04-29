@@ -84,11 +84,12 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
                 if z.right_child is not RBNode.NIL:
                     assert isinstance(z.right_child, RBNode)
                     z.right_child.parent = z
-                if x is z.parent.left_child:
-                    z.parent.left_child = z
-                else:
-                    assert z.parent.right_child is x
-                    z.parent.right_child = z
+                if x is not self.root:
+                    if x is z.parent.left_child:
+                        z.parent.left_child = z
+                    else:
+                        assert z.parent.right_child is x
+                        z.parent.right_child = z
                 return
         z.parent = y
         if y is RBNode.NIL:  # create first entry
