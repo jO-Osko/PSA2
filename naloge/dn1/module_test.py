@@ -6,6 +6,8 @@ from tree.vzorec.NaiveTree import NaiveTree
 from time import process_time
 import random
 
+from users import get_users
+
 
 def test_adding(tree: AbstractTree, n: int = 10 ** 4, shuffle: bool = True) -> None:
     ran = list(range(n))
@@ -85,10 +87,17 @@ def main() -> None:
     # start = process_time()
     # count_adding(RedBlackTree(), 1000)
     # print("Simple test: {time} s".format(time=(process_time() - start)))
-    start = process_time()
-    count_adding(NaiveTree(), 1000)
-    print("Simple test: {time} s".format(time=(process_time() - start)))
 
+    N = 10**4
+    users = get_users(add_naive=False)
+
+    for user in users:
+        try:
+            test_adding(user.tree(), N, True)
+            count_adding(user.tree(), N, False)
+            print("SUCCESS: ", user.user_name)
+        except Exception as e:
+            print("FAILED:", user.user_name, e)
 
 if __name__ == '__main__':
     main()

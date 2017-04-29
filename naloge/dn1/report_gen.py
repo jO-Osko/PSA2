@@ -1,36 +1,17 @@
 # -*- coding: utf-8 -*-
 
 """Generate report"""
-import random
+from users import get_users
 
 __author__ = "Filip Koprivec"
 
-import importlib
 from tree.AbstractTree import AbstractTree
-from typing import Type, TypeVar, List
+from typing import TypeVar
 
 from matplotlib import pyplot as pyplot
 from matplotlib import patches
 
 T = TypeVar("T", bound=AbstractTree)
-
-
-class UserData:
-    def __init__(self, user_name: str, file_name: str, class_name: str, tree: Type[T], color_code: str) -> None:
-        self.user_name = user_name
-        self.file_name = file_name
-        self.class_name = class_name
-        self.tree = tree
-        self.color_code = color_code
-
-# Za resno testiranje odstranite vzorec, saj je zelo počasen.
-trees = [
-    # ("vzorec", "NaiveTree", "NaiveTree", "r"),
-    ("FilipKoprivec", "RedBlackTree", "RedBlackTree", "b"),
-    ("EvaErzin", "SplayTree", "SplayTree", "g"),
-    # ("SamoKralj_234Tree", "Tree234", "Tree_234", "c"),
-    ("ZigaZupancic", "BTree", "BTree", "c"),
-]
 
 from time_tests import LinearInsert, AbstractTest, RandomInsert, InsertAndSearch, RandomInsertAndSearch, \
     OrderedSearchIntensive, RandomSearchIntensive, OrderedDeleteDirect, OrderedDeleteReverse, RandomDelete, \
@@ -51,17 +32,8 @@ tests = [
 ]
 
 
-def import_helper(user_name: str, file_name: str, class_name: str, prefix: str = "tree") -> Type[T]:
-    tree = getattr(importlib.import_module(".".join([prefix, user_name, file_name])), class_name)
-    return tree
-
-
 def main(size: int = 10 ** 4) -> None:
-    users = []  # type: List[UserData]
-    for user_name, file_name, class_name, color_code in trees:
-        users.append(UserData(user_name, file_name, class_name,
-                              import_helper(user_name, file_name, class_name),
-                              color_code))
+    users = get_users(add_naive=False)
 
     timings = []
 
@@ -72,7 +44,11 @@ def main(size: int = 10 ** 4) -> None:
         for user in users:
             test_instance = test(size, user.tree)  # type: AbstractTest
             print("\t" + user.class_name, end=": ")
-            temp_time.append(test_instance.time_it())
+            try:
+                tested_time = test_instance.time_it()
+                temp_time.append(tested_time)
+            except (RecursionError, AttributeError, AssertionError):
+                temp_time.append(0)
             print(temp_time[-1])
 
     pyplot.figure(figsize=(20, 10))
