@@ -84,6 +84,11 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
                 if z.right_child is not RBNode.NIL:
                     assert isinstance(z.right_child, RBNode)
                     z.right_child.parent = z
+                if x is z.parent.left_child:
+                    z.parent.left_child = z
+                else:
+                    assert z.parent.right_child is x
+                    z.parent.right_child = z
                 return
         z.parent = y
         if y is RBNode.NIL:  # create first entry
@@ -208,7 +213,7 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
             self.root = y
         else:  # mypy does not yet support this, see https://github.com/python/mypy/issues/1803
             assert isinstance(x.parent, RBNode)
-            if x == x.parent.left_child:
+            if x is x.parent.left_child:
                 x.parent.left_child = y
             else:
                 x.parent.right_child = y
@@ -227,7 +232,7 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
             self.root = x
         else:  # Same problem as in rotate_right
             assert isinstance(y.parent, RBNode)
-            if y == y.parent.right_child:
+            if y is y.parent.right_child:
                 y.parent.right_child = x
             else:
                 y.parent.left_child = x
@@ -235,20 +240,20 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
         y.parent = x
 
     def insert_fixup(self, z: Node) -> None:
-        while z.parent.color == Color.RED:
+        while z.parent.color is Color.RED:
             assert isinstance(z.parent, RBNode)
             assert isinstance(z.parent.parent, RBNode)
-            if z.parent == z.parent.parent.left_child:
+            if z.parent is z.parent.parent.left_child:
                 y = z.parent.parent.right_child
                 # assert isinstance(y, RBNode)
-                if y.color == Color.RED:
+                if y.color is Color.RED:
                     z.parent.color = Color.BLACK
                     y.color = Color.BLACK
                     z.parent.parent.color = Color.RED
                     z = z.parent.parent
                 else:
                     assert isinstance(z.parent, RBNode)  # mypy problem
-                    if z == z.parent.right_child:
+                    if z is z.parent.right_child:
                         z = z.parent
                         self.rotate_left(z)
                     assert isinstance(z.parent, RBNode)
@@ -261,14 +266,14 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
                 assert isinstance(z.parent.parent, RBNode)
                 y = z.parent.parent.left_child
                 # assert isinstance(y, RBNode)
-                if y.color == Color.RED:
+                if y.color is Color.RED:
                     z.parent.color = Color.BLACK
                     y.color = Color.BLACK
                     z.parent.parent.color = Color.RED
                     z = z.parent.parent
                 else:
                     assert isinstance(z.parent, RBNode)  # mypy problem
-                    if z == z.parent.left_child:
+                    if z is z.parent.left_child:
                         z = z.parent
                         self.rotate_right(z)
                     assert isinstance(z.parent, RBNode)
@@ -291,7 +296,7 @@ class RedBlackTree(AbstractSearchTree, Generic[T]):
         v.parent = u.parent
 
     def delete_fixup(self, x: GeneralNode) -> None:
-        while x != self.root and x.color is Color.BLACK:
+        while x is not self.root and x.color is Color.BLACK:
             assert isinstance(x.parent, RBNode)
             if x is x.parent.left_child:
                 w = x.parent.right_child
