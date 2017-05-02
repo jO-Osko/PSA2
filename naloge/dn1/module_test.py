@@ -2,6 +2,7 @@
 from tree.AbstractTree import AbstractTree
 from tree.CountingNode import CountingNode
 from tree.vzorec.NaiveTree import NaiveTree
+from tree.NinaSlivnik.MyList import SkipList
 
 from time import process_time
 import random
@@ -81,12 +82,12 @@ def count_adding(tree: AbstractTree, n: int = 10 ** 4, shuffle: bool = True) -> 
 
 def main() -> None:
     # RedBlackTree zamenjaj s svojim drevesom, ter preveri, kako deluje
-    # start = process_time()
-    # test_adding(RedBlackTree(), 10000)
-    # print("Simple test: {time} s".format(time=(process_time() - start)))
-    # start = process_time()
-    # count_adding(RedBlackTree(), 1000)
-    # print("Simple test: {time} s".format(time=(process_time() - start)))
+    start = process_time()
+    test_adding(SkipList(), 10000)
+    print("Simple test: {time} s".format(time=(process_time() - start)))
+    start = process_time()
+    count_adding(SkipList(), 1000)
+    print("Simple test: {time} s".format(time=(process_time() - start)))
 
     N = 10**4
     users = get_users(add_naive=False)
