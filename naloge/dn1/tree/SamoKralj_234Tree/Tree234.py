@@ -8,19 +8,20 @@ class Tree_234(AbstractTree):
     def __init__(self, data = []):
         self.koren = Node()
         for el in data:
-            self.add(el)
+            self.insert(el)
 
     def __repr__(self):
         return str(self.koren)
 
-    def add(self, value):
+    def insert(self, value):
         b, node = self.search(value)
         if not b:
             node.add(value)
             while self.koren.parent is not None:
                 self.koren = self.koren.parent
         else:
-            print('Element v drevesu že obstaja!')
+            pass
+            #print('Element v drevesu že obstaja!')
 
     def search(self, k):
 
@@ -52,7 +53,9 @@ class Tree_234(AbstractTree):
     def remove(self, k):
         b, node = self.search(k)
         if not b:
-            raise ValueError('Element v drevesu ne obstaja!')
+            #raise ValueError('Element v drevesu ne obstaja!')
+            #print('Element v drevesu ne obstaja!')
+            pass
         else:
             if node.height > 0:
                 v, nk = self.succ(k, node)
@@ -76,6 +79,16 @@ class Node():
 
     def __repr__(self):
         return 'Keys: ' + str(self.keys) + ' Childs: ' + str(self.childs)
+
+    def test_parents(self):
+        skupaj = True
+        for child in self.childs:
+            if child is not None:
+                if child.parent != self:
+                    print(child)
+                    return False
+                skupaj = skupaj and child.test_parents()
+        return skupaj
 
     def indeks(self, k):
         for i in range(len(self.keys)):
@@ -184,18 +197,27 @@ class Node():
             zdruzi = parent.childs[1]
             self.keys.extend(zdruzi.keys)
             self.childs.extend(zdruzi.childs[1:])
+            for child in self.childs:
+                if child is not None:
+                    child.parent = self
             parent.keys.pop(0)
             parent.childs.pop(1)
         elif ind == len(parent.keys):
             zdruzi = parent.childs[ind-1]
             self.keys = zdruzi.keys[:] + [parent.keys[ind-1]]
             self.childs = zdruzi.childs + self.childs[1:]
+            for child in self.childs:
+                if child is not None:
+                    child.parent = self
             parent.keys.pop(-1)
             parent.childs.pop(-2)
         else:
             zdruzi = parent.childs[ind+1]
             self.keys = [parent.keys[ind]] + zdruzi.keys
             self.childs = self.childs + zdruzi.childs[1:]
+            for child in self.childs:
+                if child is not None:
+                    child.parent = self
             parent.keys.pop(ind)
             parent.childs.pop(ind+1)
         if len(parent.keys) == 0:
@@ -211,6 +233,9 @@ class Node():
                         zdruzi = parent.childs[i+1]
                         self.keys = self.keys + zdruzi.keys
                         self.childs = self.childs + zdruzi.childs
+                        for child in self.childs:
+                            if child is not None:
+                                child.parent = self
                         parent.keys.pop(i)
                         parent.childs.pop(i+1)
                         if len(parent.keys) == 0:
@@ -220,6 +245,9 @@ class Node():
                         zdruzi = parent.childs[i-1]
                         self.keys = zdruzi.keys + self.keys
                         self.childs = zdruzi.childs + self.childs
+                        for child in self.childs:
+                            if child is not None:
+                                child.parent = self
                         parent.keys.pop(i-1)
                         parent.childs.pop(i-1)
                         if len(parent.keys) == 0:

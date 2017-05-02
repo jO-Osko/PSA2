@@ -2,6 +2,7 @@
 from tree.AbstractTree import AbstractTree
 from tree.CountingNode import CountingNode
 from tree.vzorec.NaiveTree import NaiveTree
+from tree.SamoKralj_234Tree.Tree234 import Tree_234
 
 from time import process_time
 import random
@@ -85,9 +86,16 @@ def main() -> None:
     # start = process_time()
     # count_adding(RedBlackTree(), 1000)
     # print("Simple test: {time} s".format(time=(process_time() - start)))
+
     start = process_time()
-    count_adding(NaiveTree(), 1000)
+    test_adding(Tree_234(), 10000)
     print("Simple test: {time} s".format(time=(process_time() - start)))
+    start = process_time()
+    count_adding(Tree_234(), 1000)
+    print("Simple test: {time} s".format(time=(process_time() - start)))
+    #start = process_time()
+    #count_adding(NaiveTree(), 1000)
+    #print("Simple test: {time} s".format(time=(process_time() - start)))
 
 
 if __name__ == '__main__':
