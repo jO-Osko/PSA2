@@ -257,11 +257,22 @@ class Treap():
             return self.root.search(key)
 
     def remove(self, key):
-        if self.root != None:
+        if key not in self:
+            raise KeyError("Key not found.")
+        elif self.root.key == key:
+            if self.root.left == None and self.root.right == None:
+                self.root == None
+            elif self.root.left == None:
+                self.root = self.root.right
+                self.root.parent = None
+            elif self.root.right == None:
+                self.root = self.root.left
+                self.root.parent = None
+
+        else: 
             self.root.remove(key)
             self.fixRoot()
-        else:
-            print("We need a root, baby")
+
 
     def __contains__(self, t):
         return self.search(t)
@@ -270,6 +281,6 @@ class Treap():
         if self.root != None:
             return self.root.size()
         else:
-            print("We need a root, baby")
+            return 0
 
 
