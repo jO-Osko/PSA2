@@ -47,7 +47,7 @@ def main(size: int = 10 ** 4) -> None:
             try:
                 tested_time = test_instance.time_it()
                 temp_time.append(tested_time)
-            except (RecursionError, AttributeError, AssertionError):
+            except (RecursionError, AttributeError, AssertionError, KeyError):
                 temp_time.append(0)
             print(temp_time[-1])
 
@@ -55,7 +55,7 @@ def main(size: int = 10 ** 4) -> None:
     pyplot.legend(handles=[patches.Patch(color=user.color_code, label=user.class_name) for user in users])
     for j in range(len(tests)):
         for i in range(len(users)):
-            pyplot.plot([j], [timings[j][i]], "o" + users[i].color_code)
+            pyplot.plot([j], [timings[j][i]], "o", color=users[i].color_code)
 
     pyplot.xticks(range(len(tests)), [test.short_name.replace(" ", "\n") for test in tests])
     pyplot.title("Prikaz časov za N=" + str(size))
