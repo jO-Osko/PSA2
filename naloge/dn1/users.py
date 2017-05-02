@@ -24,6 +24,7 @@ trees = [
     ("ZigaZupancic", "BTree", "BTree", "m"),
     ("KevinStampar", "Treap", "Treap", "y"),
     ("LukaAvbreht", "AvlTree", "AvlTree", "k"),
+    ("NinaSlivnik", "MyList", "SkipList", "lb")
 ]
 
 
