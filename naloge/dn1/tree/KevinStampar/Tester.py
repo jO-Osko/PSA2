@@ -32,6 +32,7 @@ def removing(treap,sez):
 
 def inserting(treap,sez):
     i=0
+    sajz=treap.size()
     for x in sez:
         if x not in treap:
             i=i+1
@@ -39,18 +40,18 @@ def inserting(treap,sez):
     print('dodanih je bilo {i} elementov'.format(i=i))
     print(treap.size())
 
+
 def addremove(treap,sez):
-    print("globina drevesa :" + str(treap.depth()))
     removing(treap,sez)
     inserting(treap,sez)
-    print("globina drevesa :" + str(treap.depth()))
+
 
 def testingDepth(times,size):
     for i in range(times):
         (treap,_) = randomTreap(size)
         print(treap.depth())
 
-
-(a,b)=randomTreap(1000)
-addremove(a,b)
+for i in range(1000):
+    (a,b)=randomTreap(100)
+    addremove(a,b)
 
