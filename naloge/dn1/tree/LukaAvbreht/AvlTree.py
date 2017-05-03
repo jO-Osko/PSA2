@@ -49,6 +49,9 @@ class AvlTree(AbstractTree):
             return
         else:
             while True:
+                if T == adding_to.value:
+                    adding_to.value = T
+                    break
                 if T < adding_to.value:
                     if adding_to.left is not None:
                         adding_to = adding_to.left
@@ -67,8 +70,6 @@ class AvlTree(AbstractTree):
                             adding_to.depth = 1
                         adding_to = adding_to.right
                         break
-                else:
-                    raise ValueError("can only add one element of value")
         while adding_to.parent is not None:
             adding_to._depth()
             adding_to = adding_to.parent
