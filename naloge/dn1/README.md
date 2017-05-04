@@ -38,3 +38,9 @@ mape `naloge/dn1/` možno uvoziti vaše razrede.
 Poskrbite, da bo koda berljiva in komentirana.
 
 ### Vso srečo!
+
+## Analiza
+
+![Prikaz časov][plot]
+
+[plot]: plot.png
