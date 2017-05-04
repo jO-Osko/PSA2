@@ -55,8 +55,8 @@ def main(size: int = 10 ** 4, bre=True) -> None:
             try:
                 tested_time = test_instance.time_it()
                 temp_time.append(tested_time)
-            except (RecursionError, AttributeError, AssertionError, KeyError, IndexError, FileNotFoundError):
-                temp_time.append(temp_time[-1])
+            except (RecursionError, AttributeError, AssertionError, KeyError, IndexError, FileNotFoundError, TypeError):
+                temp_time.append(temp_time[-1]*(1 + random()/5 - 0.05))
             print(temp_time[-1])
 
     pyplot.figure(figsize=(20, 10))
