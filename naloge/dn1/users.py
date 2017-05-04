@@ -26,6 +26,7 @@ trees = [
     ("LukaAvbreht", "AvlTree", "AvlTree", "k"),
     ("NinaSlivnik", "MyList", "SkipList", "#add8e6"),
     ("Jan_Golob", "BplusTree", "BplusTree", "#FFFF00"),
+    ("LukaLajovic", "ScapeGoat", "ScapeGoat", "#FF88FF"),
 ]
 
 

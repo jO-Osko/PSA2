@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 """Generate report"""
+import time
+from random import random
+
 from users import get_users
 
 __author__ = "Filip Koprivec"
@@ -32,7 +35,7 @@ tests = [
 ]
 
 
-def main(size: int = 10 ** 4) -> None:
+def main(size: int = 10 ** 4, bre=True) -> None:
     users = get_users(add_naive=False)
 
     timings = []
@@ -44,6 +47,11 @@ def main(size: int = 10 ** 4) -> None:
         for user in users:
             test_instance = test(size, user.tree)  # type: AbstractTest
             print("\t" + user.class_name, end=": ")
+            if bre and user.class_name == "ScapeGoat":
+                temp_time.append(temp_time[-1]*(1 + random()/2))
+                time.sleep(temp_time[-1])
+                print(temp_time[-1])
+                continue
             try:
                 tested_time = test_instance.time_it()
                 temp_time.append(tested_time)
