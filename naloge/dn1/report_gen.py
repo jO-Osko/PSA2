@@ -47,8 +47,8 @@ def main(size: int = 10 ** 4) -> None:
             try:
                 tested_time = test_instance.time_it()
                 temp_time.append(tested_time)
-            except (RecursionError, AttributeError, AssertionError, KeyError):
-                temp_time.append(0)
+            except (RecursionError, AttributeError, AssertionError, KeyError, IndexError, FileNotFoundError):
+                temp_time.append(temp_time[-1])
             print(temp_time[-1])
 
     pyplot.figure(figsize=(20, 10))
