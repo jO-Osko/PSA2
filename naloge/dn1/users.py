@@ -18,14 +18,14 @@ class UserData:
 # Za resno testiranje odstranite vzorec, saj je zelo počasen.
 trees = [
     ("vzorec", "NaiveTree", "NaiveTree", "r"),
-    #("FilipKoprivec", "RedBlackTree", "RedBlackTree", "b"),
-    #("EvaErzin", "SplayTree", "SplayTree", "g"),
+    ("FilipKoprivec", "RedBlackTree", "RedBlackTree", "b"),
+    ("EvaErzin", "SplayTree", "SplayTree", "g"),
     # ("SamoKralj_234Tree", "Tree234", "Tree_234", "c"),
-    #("ZigaZupancic", "BTree", "BTree", "m"),
-    #("KevinStampar", "Treap", "Treap", "y"),
-    #("LukaAvbreht", "AvlTree", "AvlTree", "k"),
-    #("NinaSlivnik", "MyList", "SkipList", "#add8e6")
-    ("vzorec", "BplusTree", "BplusTree", "k"),
+    ("ZigaZupancic", "BTree", "BTree", "m"),
+    ("KevinStampar", "Treap", "Treap", "y"),
+    ("LukaAvbreht", "AvlTree", "AvlTree", "k"),
+    ("NinaSlivnik", "MyList", "SkipList", "#add8e6"),
+    ("vzorec", "BplusTree", "BplusTree", "#FFFF00"),
 ]
 
 

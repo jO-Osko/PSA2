@@ -5,7 +5,7 @@
 import random
 
 from tree.AbstractTree import AbstractTree
-from typing import TypeVar, Callable, Optional, Any
+from typing import TypeVar, Type, Callable, Optional, Any
 from time import process_time
 
 __author__ = "Filip Koprivec"
