@@ -202,7 +202,7 @@ class InternalNode:
 
 class BplusTree(AbstractSearchTree):
     def __init__(self):
-        b = 5
+        b = 20
         assert b > 2
         self.root = InternalNode(b)
         self.root.children.append(LeafNode(b, self.root))
