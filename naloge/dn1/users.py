@@ -1,5 +1,5 @@
 import importlib
-from typing import Type, TypeVar, List
+from typing import TypeVar, List
 
 from tree.AbstractTree import AbstractTree
 
@@ -24,7 +24,8 @@ trees = [
     ("ZigaZupancic", "BTree", "BTree", "m"),
     ("KevinStampar", "Treap", "Treap", "y"),
     ("LukaAvbreht", "AvlTree", "AvlTree", "k"),
-    ("NinaSlivnik", "MyList", "SkipList", "#add8e6")
+    ("NinaSlivnik", "MyList", "SkipList", "#add8e6"),
+    ("vzorec", "BplusTree", "BplusTree", "#FFFF00"),
 ]
 
 
